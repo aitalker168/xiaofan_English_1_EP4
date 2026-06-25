@@ -48,63 +48,29 @@ def set_custom_style():
         .huge-text { font-size: 36px; font-weight: 700; }
         .progress-rabbit { text-align: center; font-size: 28px; margin-bottom: 10px; }
         .sidebar .sidebar-content { background: #fff3e0; }
-
-        /* 所有按钮统一加大 */
-        .stButton > button {
-            padding: 16px 32px !important;
-            font-size: 22px !important;
-            border-radius: 16px !important;
-            font-weight: 700 !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-        }
-        .stButton > button[kind="primary"] { background: #38BDF8 !important; }
-        .stButton > button[kind="primary"]:hover { background: #0ea5e9 !important; }
-
-        /* 大图区域旋转按钮（大蓝色） */
-        #big-image-section .stButton > button:not(:last-child) {
-            background: #2196F3 !important;
-            font-size: 28px !important;
-            padding: 24px 40px !important;
-            width: 100% !important;
-        }
-        #big-image-section .stButton > button:not(:last-child):hover {
-            background: #1976D2 !important;
-        }
-
-        /* 关闭大图按钮（巨大红色） */
+        .stButton > button { color: white !important; background: #4CAF50; border: none !important; padding: 12px 24px; font-size: 18px; border-radius: 12px; font-weight: 600; }
+        .stButton > button:hover { background: #45a049; }
+        .stButton > button[kind="primary"] { background: #38BDF8; }
+        .stButton > button[kind="primary"]:hover { background: #0ea5e9; }
+        .stTextInput input, .stTextArea textarea { color: #333 !important; background: white !important; border: 2px solid #ddd !important; border-radius: 12px !important; padding: 12px !important; font-size: 18px !important; }
+        .stProgress > div > div { background: linear-gradient(90deg, #38BDF8, #A3E635) !important; }
+        .stSuccess { color: #2e7d32; background: #e8f5e9; padding: 10px; border-radius: 12px; }
+        .stWarning { color: #e65100; background: #fff3e0; padding: 10px; border-radius: 12px; }
+        .stInfo { color: #1565c0; background: #e3f2fd; padding: 10px; border-radius: 12px; }
+        .stImage > img { cursor: default !important; }
+        .stImage > button { display: none !important; }
         #big-image-section .stButton:last-child > button {
             background: #f44336 !important;
-            font-size: 32px !important;
-            padding: 28px 60px !important;
-            border-radius: 24px !important;
+            font-size: 28px !important;
+            padding: 20px 40px !important;
+            border-radius: 20px !important;
+            font-weight: bold !important;
             width: 100% !important;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
         }
         #big-image-section .stButton:last-child > button:hover {
             background: #d32f2f !important;
         }
-
-        /* 隐藏默认图片工具栏（右上角黑色放大缩小按钮） */
-        .stImage > button { display: none !important; }
-        .element-container .stImage > div > div > button { display: none !important; }
-
-        /* 输入框 */
-        .stTextInput input, .stTextArea textarea {
-            color: #333 !important;
-            background: white !important;
-            border: 2px solid #ddd !important;
-            border-radius: 12px !important;
-            padding: 16px !important;
-            font-size: 20px !important;
-        }
-
-        /* 进度条 */
-        .stProgress > div > div { background: linear-gradient(90deg, #38BDF8, #A3E635) !important; }
-
-        /* 反馈信息 */
-        .stSuccess { color: #2e7d32; background: #e8f5e9; padding: 16px; border-radius: 16px; font-size: 22px; }
-        .stWarning { color: #e65100; background: #fff3e0; padding: 16px; border-radius: 16px; font-size: 22px; }
-        .stInfo { color: #1565c0; background: #e3f2fd; padding: 16px; border-radius: 16px; font-size: 22px; }
         </style>
     """, unsafe_allow_html=True)
 
@@ -148,7 +114,7 @@ def main():
     st.markdown("---")
     st.markdown(f"## 📖 {sess.get('title','')}")
 
-    # 视频卡片
+    # Video card
     with st.container():
         st.markdown("<div class='card'>", unsafe_allow_html=True)
         yt = load_video_config().get("youtube_url","")
@@ -159,7 +125,7 @@ def main():
             st.info("Enter a YouTube URL in the sidebar and save it.")
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # 核心词汇（不含中文）
+    # Vocabulary (no Chinese caption)
     vocab = sess.get("vocabulary", [])
     if vocab:
         st.markdown("### 🗂️ Vocabulary")
@@ -171,7 +137,7 @@ def main():
                 fp = resolve_image_path(img_fn)
                 if fp and fp.exists():
                     st.image(fp, width=120, use_container_width=False)
-                    if st.button("🔍 View Large", key=f"big_{sess_idx}_{i}", use_container_width=True):
+                    if st.button("🔍 View Large", key=f"big_{sess_idx}_{i}"):
                         st.session_state.big_image = str(fp)
                         st.session_state.big_image_angle = 0
                         st.rerun()
@@ -184,7 +150,7 @@ def main():
                 audio_button(wd["word"], key_suffix=f"voc_{sess_idx}_{i}")
                 st.markdown("</div>", unsafe_allow_html=True)
 
-    # 大图显示
+    # Large image overlay
     if st.session_state.big_image and os.path.exists(st.session_state.big_image):
         st.markdown("---")
         st.markdown('<div id="big-image-section">', unsafe_allow_html=True)
@@ -195,16 +161,16 @@ def main():
         st.image(rotated_path, use_container_width=True, clamp=True)
         col_b1, col_b2 = st.columns(2)
         with col_b1:
-            if st.button("🔄 Rotate Left 90°", use_container_width=True):
+            if st.button("🔄 Rotate Left 90°"):
                 st.session_state.big_image_angle -= 90; st.rerun()
         with col_b2:
-            if st.button("🔄 Rotate Right 90°", use_container_width=True):
+            if st.button("🔄 Rotate Right 90°"):
                 st.session_state.big_image_angle += 90; st.rerun()
         if st.button("✖ Close Image (Back)", key="close_big_image", use_container_width=True):
             st.session_state.big_image = None; st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # 练习题
+    # Exercises
     st.markdown("---")
     exercises = sess.get("exercises", [])
     ex_idx = st.session_state.current_exercise
