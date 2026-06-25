@@ -22,8 +22,8 @@ def init_state():
         "finished_today": False,
         "big_image": None,
         "big_image_angle": 0,
-        "grammar_video_loaded": False,    # 是否已加载视频
-        "grammar_video_id": "",           # 视频ID
+        "grammar_video_loaded": False,
+        "grammar_video_id": "",
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -117,15 +117,17 @@ def main():
                 st.error("Invalid YouTube URL")
     st.markdown("---")
 
-    # ========= 语法视频播放器卡片（加载后显示，带暂停/播放/关闭） =========
+    # ========= 语法视频播放器 + 控制按钮（一体化） =========
     if st.session_state.grammar_video_loaded and st.session_state.grammar_video_id:
-        with st.container():
-            st.markdown("<div class='card'>", unsafe_allow_html=True)
-            st.markdown("### 🎬 Grammar Video")
-            # 使用components.html嵌入带有JS控制的iframe，实现暂停/播放
-            vid = st.session_state.grammar_video_id
-            player_id = "grammar_player"
-            html_code = f"""
+        vid = st.session_state.grammar_video_id
+        # 生成一个随机key防止iframe冲突
+        import random
+        uid = random.randint(1000,9999)
+        player_id = f"grammar_player_{uid}"
+
+        html_code = f"""
+        <div style="background: white; border-radius: 24px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: 12px 0;">
+            <h3 style="color: #333; font-family: 'Quicksand', sans-serif; margin-top:0;">🎬 Grammar Video</h3>
             <div style="position:relative; width:100%; max-width:800px; margin:0 auto;">
                 <div style="position:relative; padding-bottom:56.25%; height:0;">
                     <iframe id="{player_id}" 
@@ -135,36 +137,41 @@ def main():
                     </iframe>
                 </div>
             </div>
-            <script>
-            var tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-            var player;
-            function onYouTubeIframeAPIReady() {{
-                player = new YT.Player('{player_id}', {{}});
-            }}
-            </script>
-            """
-            components.html(html_code, height=0)
+            <div style="display:flex; gap:12px; margin-top:16px;">
+                <button onclick="playVideo_{uid}()" style="flex:1; padding:16px; font-size:22px; background:#4CAF50; color:white; border:none; border-radius:16px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">▶️ Play</button>
+                <button onclick="pauseVideo_{uid}()" style="flex:1; padding:16px; font-size:22px; background:#FF9800; color:white; border:none; border-radius:16px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">⏸️ Pause</button>
+                <button onclick="closeVideo_{uid}()" style="flex:1; padding:16px; font-size:22px; background:#f44336; color:white; border:none; border-radius:16px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">✖ Close</button>
+            </div>
+        </div>
+        <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        var player_{uid};
+        function onYouTubeIframeAPIReady() {{
+            player_{uid} = new YT.Player('{player_id}', {{}});
+        }}
+        function playVideo_{uid}() {{ if(player_{uid}) player_{uid}.playVideo(); }}
+        function pauseVideo_{uid}() {{ if(player_{uid}) player_{uid}.pauseVideo(); }}
+        function closeVideo_{uid}() {{
+            if(player_{uid}) player_{uid}.pauseVideo();
+            // 通过URL参数触发Streamlit关闭
+            var url = new URL(window.location.href);
+            url.searchParams.set('close_grammar', '1');
+            window.location.href = url.href;
+        }}
+        </script>
+        """
+        components.html(html_code, height=500)
 
-            # 三个控制按钮
-            col_p1, col_p2, col_p3 = st.columns(3)
-            with col_p1:
-                if st.button("▶️ Play", key="play_grammar", use_container_width=True):
-                    # 通过iframe内的JS播放
-                    play_js = f"<script>var iframe = document.getElementById('{player_id}'); if(iframe) iframe.contentWindow.postMessage('{{"event":"command","func":"playVideo","args":""}}', '*');</script>"
-                    components.html(play_js, height=0)
-            with col_p2:
-                if st.button("⏸️ Pause", key="pause_grammar", use_container_width=True):
-                    pause_js = f"<script>var iframe = document.getElementById('{player_id}'); if(iframe) iframe.contentWindow.postMessage('{{"event":"command","func":"pauseVideo","args":""}}', '*');</script>"
-                    components.html(pause_js, height=0)
-            with col_p3:
-                if st.button("✖ Close", key="close_grammar", use_container_width=True):
-                    st.session_state.grammar_video_loaded = False
-                    st.session_state.grammar_video_id = ""
-                    st.rerun()
-            st.markdown("</div>", unsafe_allow_html=True)
+    # 检测关闭语法视频参数
+    query_params = st.query_params
+    if "close_grammar" in query_params:
+        st.session_state.grammar_video_loaded = False
+        st.session_state.grammar_video_id = ""
+        st.query_params.clear()
+        st.rerun()
 
     # ========= 主课程内容（与之前一致） =========
     weeks = data.get("weeks", [])
