@@ -78,14 +78,6 @@ def main():
     init_state()
     set_custom_style()
 
-    # 检测关闭语法视频参数（通过URL参数通信）
-    query_params = st.query_params
-    if "close_grammar" in query_params:
-        st.session_state.grammar_video_loaded = False
-        st.session_state.grammar_video_id = ""
-        st.query_params.clear()
-        st.rerun()
-
     data = load_course_data()
     if data is None:
         st.warning("Please generate course_data.json first."); return
@@ -105,7 +97,7 @@ def main():
             for k in ["current_session","current_exercise","score","stars","finished_today","grammar_video_loaded"]:
                 st.session_state.pop(k, None); st.rerun()
 
-    # ========= 语法视频输入与加载（始终显示） =========
+    # ========= 语法视频输入与加载 =========
     st.markdown("---")
     col_input, col_btn = st.columns([3, 1])
     with col_input:
@@ -125,15 +117,15 @@ def main():
                 st.error("Invalid YouTube URL")
     st.markdown("---")
 
-    # ========= 语法视频播放器 + 控制按钮（一体化，使用随机id避免冲突） =========
+    # ========= 语法视频播放器 + 控制按钮 =========
     if st.session_state.grammar_video_loaded and st.session_state.grammar_video_id:
         vid = st.session_state.grammar_video_id
         import random
-        uid = random.randint(1000,9999)
+        uid = random.randint(1000, 9999)
         player_id = f"grammar_player_{uid}"
 
         html_code = f"""
-        <div id="grammar-container-{uid}" style="background: white; border-radius: 24px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: 12px 0;">
+        <div id="grammar-container-{uid}" style="background: white; border-radius: 24px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: 12px 0; transition: all 0.3s;">
             <h3 style="color: #333; font-family: 'Quicksand', sans-serif; margin-top:0;">🎬 Grammar Video</h3>
             <div style="position:relative; width:100%; max-width:800px; margin:0 auto;">
                 <div style="position:relative; padding-bottom:56.25%; height:0;">
@@ -162,63 +154,25 @@ def main():
         function playVideo_{uid}() {{ if(player_{uid}) player_{uid}.playVideo(); }}
         function pauseVideo_{uid}() {{ if(player_{uid}) player_{uid}.pauseVideo(); }}
         function closeVideo_{uid}() {{
-            if(player_{uid}) player_{uid}.pauseVideo();
-            // 隐藏自身
+            if(player_{uid}) player_{uid}.stopVideo();
+            // 彻底销毁容器：清空内容并压缩高度至0
             var container = document.getElementById('grammar-container-{uid}');
-            if(container) container.style.display = 'none';
-            // 通知父页面关闭（通过postMessage）
-            window.parent.postMessage('close_grammar_video', '*');
+            if(container) {{
+                container.innerHTML = '';
+                container.style.padding = '0';
+                container.style.margin = '0';
+                container.style.height = '0';
+                container.style.overflow = 'hidden';
+                container.style.border = 'none';
+                container.style.boxShadow = 'none';
+                container.style.background = 'transparent';
+            }}
         }}
         </script>
         """
         components.html(html_code, height=500)
 
-        # 注入一个全局监听 postMessage 的脚本，用于接收关闭信号
-        st.markdown("""
-        <script>
-        window.addEventListener('message', function(event) {
-            if (event.data === 'close_grammar_video') {
-                // 通过修改URL参数触发Streamlit rerun
-                var url = new URL(window.location.href);
-                url.searchParams.set('close_grammar', '1');
-                window.history.replaceState({}, '', url.href);
-                // 手动触发Streamlit的rerun（通过点击隐藏按钮）
-                // 实际上 Streamlit 会自动检测 URL 变化？不，需要页面刷新或 rerun 事件。
-                // 最可靠的是直接重新加载页面（可能会丢失进度，但不会丢失session_state）
-                // 或者我们可以使用streamlit的js函数来rerun
-                // 这里采用简单方式：直接设置location.href（会导致页面刷新，session_state保持）
-                // 但是为了保留进度，我们更希望只触发rerun而不刷新页面。
-                // 可以使用Streamlit的postMessage机制？不，没有标准API。
-                // 替代：在Python端我们已经在main开始时检测了query_params，但是需要rerun才能检测。
-                // 因此我们这里需要触发rerun。常用的技巧：在页面中添加一个隐藏的按钮点击事件。
-                // 我们可以通过创建一个隐藏的a标签并点击来触发location.reload？不行。
-                // 另一个方法：使用window.location.reload(true)。但会刷新页面。
-                // 为了避免刷新导致session_state丢失（但session_state存储在服务端，刷新不丢失），可以接受。
-                // 然而刷新会重置当前UI状态（如展开的面板），但无关紧要。
-                // 为了效果更好，我们可以使用fetch一个虚拟请求来触发Streamlit rerun？太复杂。
-                // 这里选择使用location.reload()，因为session_state是服务端的，刷新后仍然保留。
-                // 但我们的session_state清除是在Python检测到close_grammar参数后执行的，刷新后参数还在，会清除状态。
-                // 所以先清除参数再刷新？不行，需要先让Python处理。
-                // 更合理：我们在closeVideo中已经隐藏了容器，用户看不到视频了。
-                // 然后Python端不需要立刻清除状态，下次rerun时（如用户操作其他按钮）再清除。
-                // 但为了保险，我们可以在closeVideo中设置一个cookie或sessionStorage，然后Python端在每次运行时检测。
-                // 但Python无法读取浏览器存储。
-                // 最简单：让用户点击Close后，容器隐藏，状态保留，下次加载新视频时自动替换。
-                // 所以Python端不需要清除！我们只需要隐藏容器。
-                // 因此我们在closeVideo中已经隐藏了容器，且没有触发rerun。
-                // 这已经达到了“关闭”的效果——视频消失了。
-                // 当用户下次点击Load Video时，会重新设置session_state，覆盖旧的，再次显示。
-                // 所以Python端不需要清除状态。
-                // 修改：移除之前的query参数检测，不再清除状态。
-                // 但为了状态整洁，可以在Load Video时覆盖，不需要清除。
-                // 因此我们简化：Close按钮只隐藏容器，不触发任何Python状态更改。
-                // 这样最简单且可靠。
-            }
-        });
-        </script>
-        """, unsafe_allow_html=True)
-
-    # ========= 主课程内容（与之前一致） =========
+    # ========= 主课程内容 =========
     weeks = data.get("weeks", [])
     if not weeks: st.warning("No course data"); return
     all_sessions = [s for w in weeks for s in w.get("sessions", [])]
