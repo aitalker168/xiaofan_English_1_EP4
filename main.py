@@ -22,8 +22,8 @@ def init_state():
         "finished_today": False,
         "big_image": None,
         "big_image_angle": 0,
-        "show_grammar_video": False,
-        "grammar_video_url": "",
+        "grammar_video_loaded": False,    # 是否已加载视频
+        "grammar_video_id": "",           # 视频ID
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -94,43 +94,79 @@ def main():
         st.markdown(f"**Stars**: {'⭐'*min(st.session_state.stars,5)} {st.session_state.stars}")
         st.markdown(f"**Session**: {st.session_state.current_session+1}/{total_sessions}")
         if st.button("Reset Progress", use_container_width=True):
-            for k in ["current_session","current_exercise","score","stars","finished_today","show_grammar_video"]:
+            for k in ["current_session","current_exercise","score","stars","finished_today","grammar_video_loaded"]:
                 st.session_state.pop(k, None); st.rerun()
 
-    # ========= 语法视频输入与播放控制 =========
+    # ========= 语法视频输入与加载（始终显示） =========
     st.markdown("---")
-    col1, col2, col3 = st.columns([3, 1, 1])
-    with col1:
-        grammar_url = st.text_input("🎬 Grammar Video URL (optional)", 
+    col_input, col_btn = st.columns([3, 1])
+    with col_input:
+        grammar_url = st.text_input("🎬 Grammar Video (optional)", 
                                     value=st.session_state.get("grammar_url_input",""),
                                     key="grammar_url_input",
                                     placeholder="Paste YouTube grammar video link here")
-    with col2:
+    with col_btn:
         st.markdown("<br>", unsafe_allow_html=True)
-        if st.button("▶️ Play", use_container_width=True):
+        if st.button("📥 Load Video", use_container_width=True):
             vid = parse_youtube_video_id(grammar_url)
             if vid:
-                st.session_state.grammar_video_url = f"https://www.youtube.com/watch?v={vid}"
-                st.session_state.show_grammar_video = True
+                st.session_state.grammar_video_id = vid
+                st.session_state.grammar_video_loaded = True
                 st.rerun()
             else:
                 st.error("Invalid YouTube URL")
-    with col3:
-        st.markdown("<br>", unsafe_allow_html=True)
-        if st.button("⏹ Stop", use_container_width=True):
-            st.session_state.show_grammar_video = False
-            st.rerun()
     st.markdown("---")
 
-    # ========= 语法视频播放区（带原生控件，支持暂停） =========
-    if st.session_state.show_grammar_video and st.session_state.grammar_video_url:
+    # ========= 语法视频播放器卡片（加载后显示，带暂停/播放/关闭） =========
+    if st.session_state.grammar_video_loaded and st.session_state.grammar_video_id:
         with st.container():
             st.markdown("<div class='card'>", unsafe_allow_html=True)
             st.markdown("### 🎬 Grammar Video")
-            st.video(st.session_state.grammar_video_url)
+            # 使用components.html嵌入带有JS控制的iframe，实现暂停/播放
+            vid = st.session_state.grammar_video_id
+            player_id = "grammar_player"
+            html_code = f"""
+            <div style="position:relative; width:100%; max-width:800px; margin:0 auto;">
+                <div style="position:relative; padding-bottom:56.25%; height:0;">
+                    <iframe id="{player_id}" 
+                        src="https://www.youtube.com/embed/{vid}?rel=0&modestbranding=1&controls=1&playsinline=1&iv_load_policy=3&cc_load_policy=0&enablejsapi=1" 
+                        style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius:12px;" 
+                        frameborder="0" allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+            <script>
+            var tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            var player;
+            function onYouTubeIframeAPIReady() {{
+                player = new YT.Player('{player_id}', {{}});
+            }}
+            </script>
+            """
+            components.html(html_code, height=0)
+
+            # 三个控制按钮
+            col_p1, col_p2, col_p3 = st.columns(3)
+            with col_p1:
+                if st.button("▶️ Play", key="play_grammar", use_container_width=True):
+                    # 通过iframe内的JS播放
+                    play_js = f"<script>var iframe = document.getElementById('{player_id}'); if(iframe) iframe.contentWindow.postMessage('{{"event":"command","func":"playVideo","args":""}}', '*');</script>"
+                    components.html(play_js, height=0)
+            with col_p2:
+                if st.button("⏸️ Pause", key="pause_grammar", use_container_width=True):
+                    pause_js = f"<script>var iframe = document.getElementById('{player_id}'); if(iframe) iframe.contentWindow.postMessage('{{"event":"command","func":"pauseVideo","args":""}}', '*');</script>"
+                    components.html(pause_js, height=0)
+            with col_p3:
+                if st.button("✖ Close", key="close_grammar", use_container_width=True):
+                    st.session_state.grammar_video_loaded = False
+                    st.session_state.grammar_video_id = ""
+                    st.rerun()
             st.markdown("</div>", unsafe_allow_html=True)
 
-    # ========= 主内容 =========
+    # ========= 主课程内容（与之前一致） =========
     weeks = data.get("weeks", [])
     if not weeks: st.warning("No course data"); return
     all_sessions = [s for w in weeks for s in w.get("sessions", [])]
