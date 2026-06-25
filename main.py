@@ -23,7 +23,7 @@ def init_state():
         "big_image": None,
         "big_image_angle": 0,
         "show_grammar_video": False,
-        "grammar_video_embed": "",
+        "grammar_video_url": "",
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -52,41 +52,17 @@ def set_custom_style():
         .huge-text { font-size: 36px; font-weight: 700; }
         .progress-rabbit { text-align: center; font-size: 28px; margin-bottom: 10px; }
         .sidebar .sidebar-content { background: #fff3e0; }
-        .stButton > button {
-            padding: 16px 32px !important;
-            font-size: 22px !important;
-            border-radius: 16px !important;
-            font-weight: 700 !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-        }
+        .stButton > button { color: white !important; background: #4CAF50; border: none !important; padding: 16px 32px !important; font-size: 22px !important; border-radius: 16px !important; font-weight: 700 !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; }
+        .stButton > button:hover { background: #45a049; }
         .stButton > button[kind="primary"] { background: #38BDF8 !important; }
         .stButton > button[kind="primary"]:hover { background: #0ea5e9 !important; }
-        #big-image-section .stButton > button:not(:last-child) {
-            background: #2196F3 !important;
-            font-size: 28px !important;
-            padding: 24px 40px !important;
-            width: 100% !important;
-        }
+        #big-image-section .stButton > button:not(:last-child) { background: #2196F3 !important; font-size: 28px !important; padding: 24px 40px !important; width: 100% !important; }
         #big-image-section .stButton > button:not(:last-child):hover { background: #1976D2 !important; }
-        #big-image-section .stButton:last-child > button {
-            background: #f44336 !important;
-            font-size: 32px !important;
-            padding: 28px 60px !important;
-            border-radius: 24px !important;
-            width: 100% !important;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
-        }
+        #big-image-section .stButton:last-child > button { background: #f44336 !important; font-size: 32px !important; padding: 28px 60px !important; border-radius: 24px !important; width: 100% !important; box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important; }
         #big-image-section .stButton:last-child > button:hover { background: #d32f2f !important; }
         .stImage > button { display: none !important; }
         .element-container .stImage > div > div > button { display: none !important; }
-        .stTextInput input, .stTextArea textarea {
-            color: #333 !important;
-            background: white !important;
-            border: 2px solid #ddd !important;
-            border-radius: 12px !important;
-            padding: 16px !important;
-            font-size: 20px !important;
-        }
+        .stTextInput input, .stTextArea textarea { color: #333 !important; background: white !important; border: 2px solid #ddd !important; border-radius: 12px !important; padding: 16px !important; font-size: 20px !important; }
         .stProgress > div > div { background: linear-gradient(90deg, #38BDF8, #A3E635) !important; }
         .stSuccess { color: #2e7d32; background: #e8f5e9; padding: 16px; border-radius: 16px; font-size: 22px; }
         .stWarning { color: #e65100; background: #fff3e0; padding: 16px; border-radius: 16px; font-size: 22px; }
@@ -102,18 +78,11 @@ def main():
     init_state()
     set_custom_style()
 
-    # 检测关闭视频参数
-    query_params = st.query_params
-    if "close_video" in query_params:
-        st.session_state.show_grammar_video = False
-        st.query_params.clear()
-        st.rerun()
-
     data = load_course_data()
     if data is None:
         st.warning("Please generate course_data.json first."); return
 
-    # ========= 侧边栏（只保留课程视频和家长控制） =========
+    # ========= 侧边栏 =========
     with st.sidebar:
         st.markdown("## 👨‍👦 Parent Control")
         video_cfg = load_video_config()
@@ -125,71 +94,41 @@ def main():
         st.markdown(f"**Stars**: {'⭐'*min(st.session_state.stars,5)} {st.session_state.stars}")
         st.markdown(f"**Session**: {st.session_state.current_session+1}/{total_sessions}")
         if st.button("Reset Progress", use_container_width=True):
-            for k in ["current_session","current_exercise","score","stars","finished_today","show_grammar_video","grammar_video_embed"]:
+            for k in ["current_session","current_exercise","score","stars","finished_today","show_grammar_video"]:
                 st.session_state.pop(k, None); st.rerun()
 
-    # ========= 语法视频输入框（固定显示在所有页面顶部） =========
+    # ========= 语法视频输入与播放控制 =========
     st.markdown("---")
-    col_input, col_btn = st.columns([3, 1])
-    with col_input:
+    col1, col2, col3 = st.columns([3, 1, 1])
+    with col1:
         grammar_url = st.text_input("🎬 Grammar Video URL (optional)", 
                                     value=st.session_state.get("grammar_url_input",""),
                                     key="grammar_url_input",
                                     placeholder="Paste YouTube grammar video link here")
-    with col_btn:
-        st.markdown("<br>", unsafe_allow_html=True)  # 对齐按钮
+    with col2:
+        st.markdown("<br>", unsafe_allow_html=True)
         if st.button("▶️ Play", use_container_width=True):
             vid = parse_youtube_video_id(grammar_url)
             if vid:
-                embed = f"https://www.youtube.com/embed/{vid}?rel=0&modestbranding=1&controls=1&playsinline=1&autoplay=1&iv_load_policy=3&cc_load_policy=0&enablejsapi=1"
-                st.session_state.grammar_video_embed = embed
+                st.session_state.grammar_video_url = f"https://www.youtube.com/watch?v={vid}"
                 st.session_state.show_grammar_video = True
                 st.rerun()
             else:
                 st.error("Invalid YouTube URL")
+    with col3:
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("⏹ Stop", use_container_width=True):
+            st.session_state.show_grammar_video = False
+            st.rerun()
     st.markdown("---")
 
-    # ========= 语法视频浮层 =========
-    if st.session_state.show_grammar_video and st.session_state.grammar_video_embed:
-        embed_url = st.session_state.grammar_video_embed
-        player_id = "grammar_player"
-        html_code = f"""
-        <div id="video-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; display:flex; justify-content:center; align-items:center; flex-direction:column;">
-            <div style="position:relative; width:90%; max-width:800px;">
-                <div style="position:relative; padding-bottom:56.25%; height:0;">
-                    <iframe id="{player_id}" src="{embed_url}" style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius:12px;" frameborder="0" allowfullscreen allow="autoplay"></iframe>
-                </div>
-            </div>
-            <button onclick="closeVideo()" style="margin-top:20px; padding:16px 48px; font-size:28px; background:#f44336; color:white; border:none; border-radius:20px; cursor:pointer; font-weight:bold; box-shadow:0 4px 12px rgba(0,0,0,0.3);">✖ Close Video</button>
-        </div>
-        <script>
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        var player;
-        function onYouTubeIframeAPIReady() {{
-            player = new YT.Player('{player_id}', {{
-                events: {{
-                    'onStateChange': onPlayerStateChange
-                }}
-            }});
-        }}
-        function onPlayerStateChange(event) {{
-            if (event.data == 0) {{  // ended
-                closeVideo();
-            }}
-        }}
-        function closeVideo() {{
-            if (player && player.stopVideo) player.stopVideo();
-            // 通过添加URL参数触发Streamlit rerun以关闭状态
-            var url = new URL(window.location.href);
-            url.searchParams.set('close_video', '1');
-            window.location.href = url.href;
-        }}
-        </script>
-        """
-        components.html(html_code, height=0)
+    # ========= 语法视频播放区（带原生控件，支持暂停） =========
+    if st.session_state.show_grammar_video and st.session_state.grammar_video_url:
+        with st.container():
+            st.markdown("<div class='card'>", unsafe_allow_html=True)
+            st.markdown("### 🎬 Grammar Video")
+            st.video(st.session_state.grammar_video_url)
+            st.markdown("</div>", unsafe_allow_html=True)
 
     # ========= 主内容 =========
     weeks = data.get("weeks", [])
