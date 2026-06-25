@@ -1,0 +1,882 @@
+{
+  "course_metadata": {
+    "title": "My Pals English 3A",
+    "age_group": "9 years old",
+    "total_sessions": 24,
+    "execution_mode": "Mode_B_Two_Rounds"
+  },
+  "weeks": [
+    {
+      "week_number": 1,
+      "sessions": [
+        {
+          "session_number": 1,
+          "round": 1,
+          "title": "Unit 1 – A Helping Hand (Part A)",
+          "vocabulary": [
+            { "word": "mop", "chinese": "", "image": "mop.png", "audio": "mop.mp3" },
+            { "word": "clear", "chinese": "", "image": "clear.png", "audio": "clear.mp3" },
+            { "word": "put away", "chinese": "", "image": "put away.png", "audio": "put_away.mp3" }
+          ],
+          "target_sentences": [
+            { "english": "Shall I mop the floor?", "chinese": "", "audio": "sentence_u1_s1.mp3" },
+            { "english": "Yes, please. / No, thanks.", "chinese": "", "audio": "sentence_u1_s1_2.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W1_S1_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose.",
+              "audio_text": "mop",
+              "options": [
+                { "text": "mop", "image": "" },
+                { "text": "clear", "image": "" },
+                { "text": "put away", "image": "" }
+              ],
+              "correct": "mop"
+            },
+            {
+              "question_id": "W1_S1_Q2",
+              "type": "spelling_puzzle",
+              "question_text": "Put the letters in order.",
+              "word": "mop",
+              "scrambled": ["p", "o", "m"],
+              "chinese": "",
+              "image": ""
+            }
+          ]
+        },
+        {
+          "session_number": 2,
+          "round": 1,
+          "title": "Unit 1 – A Helping Hand (Part B)",
+          "vocabulary_review": ["mop", "clear", "put away"],
+          "vocabulary": [
+            { "word": "paint", "chinese": "", "image": "paint.png", "audio": "paint.mp3" },
+            { "word": "wash", "chinese": "", "image": "wash.png", "audio": "wash.mp3" },
+            { "word": "tidy", "chinese": "", "image": "tidy.png", "audio": "tidy.mp3" }
+          ],
+          "target_sentences": [
+            { "english": "Let me help you.", "chinese": "", "audio": "sentence_u1_s2_1.mp3" },
+            { "english": "He helps me tidy the room.", "chinese": "", "audio": "sentence_u1_s2_2.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W1_S2_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose.",
+              "audio_text": "wash the car",
+              "options": [
+                { "text": "paint", "image": "" },
+                { "text": "wash", "image": "" },
+                { "text": "tidy", "image": "" }
+              ],
+              "correct": "wash"
+            },
+            {
+              "question_id": "W1_S2_Q2",
+              "type": "shadowing",
+              "sentence": "Let me help you.",
+              "chinese": "",
+              "audio": "sentence_u1_s2_1.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 2,
+      "sessions": [
+        {
+          "session_number": 3,
+          "round": 1,
+          "title": "Unit 2 – Feelings (Part A)",
+          "vocabulary": [
+            { "word": "happy", "chinese": "", "image": "happy.png", "audio": "happy.mp3" },
+            { "word": "sad", "chinese": "", "image": "sad.png", "audio": "sad.mp3" },
+            { "word": "angry", "chinese": "", "image": "angry.png", "audio": "angry.mp3" },
+            { "word": "scared", "chinese": "", "image": "scared.png", "audio": "scared.mp3" },
+            { "word": "worried", "chinese": "", "image": "worried.png", "audio": "worried.mp3" }
+          ],
+          "target_sentences": [
+            { "english": "I'm happy.", "chinese": "", "audio": "sentence_u2_s3_1.mp3" },
+            { "english": "Are you sad?", "chinese": "", "audio": "sentence_u2_s3_2.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W2_S3_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose the feeling.",
+              "audio_text": "angry",
+              "options": [
+                { "text": "happy", "image": "" },
+                { "text": "sad", "image": "" },
+                { "text": "angry", "image": "" }
+              ],
+              "correct": "angry"
+            },
+            {
+              "question_id": "W2_S3_Q2",
+              "type": "spelling_puzzle",
+              "question_text": "Spell the word.",
+              "word": "happy",
+              "scrambled": ["p", "a", "p", "h", "y"],
+              "chinese": "",
+              "image": ""
+            }
+          ]
+        },
+        {
+          "session_number": 4,
+          "round": 1,
+          "title": "Unit 2 – Feelings (Part B)",
+          "vocabulary_review": ["happy", "sad", "angry", "scared", "worried"],
+          "vocabulary": [
+            { "word": "excited", "chinese": "", "image": "excited.png", "audio": "excited.mp3" },
+            { "word": "surprised", "chinese": "", "image": "surprised.png", "audio": "surprised.mp3" },
+            { "word": "tired", "chinese": "", "image": "tired.png", "audio": "tired.mp3" },
+            { "word": "bored", "chinese": "", "image": "bored.png", "audio": "bored.mp3" }
+          ],
+          "target_sentences": [
+            { "english": "Why are you happy?", "chinese": "", "audio": "sentence_u2_s4_1.mp3" },
+            { "english": "Because I have a new toy.", "chinese": "", "audio": "sentence_u2_s4_2.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W2_S4_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose.",
+              "audio_text": "excited",
+              "options": [
+                { "text": "excited", "image": "" },
+                { "text": "surprised", "image": "" },
+                { "text": "tired", "image": "" }
+              ],
+              "correct": "excited"
+            },
+            {
+              "question_id": "W2_S4_Q2",
+              "type": "shadowing",
+              "sentence": "Why are you happy?",
+              "chinese": "",
+              "audio": "sentence_u2_s4_1.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 3,
+      "sessions": [
+        {
+          "session_number": 5,
+          "round": 1,
+          "title": "Unit 3 – Animal World (Part A)",
+          "vocabulary": [
+            { "word": "desert", "chinese": "", "image": "desert.png", "audio": "desert.mp3" },
+            { "word": "rainforest", "chinese": "", "image": "rainforest.png", "audio": "rainforest.mp3" },
+            { "word": "ocean", "chinese": "", "image": "ocean.png", "audio": "ocean.mp3" },
+            { "word": "mountains", "chinese": "", "image": "mountains.png", "audio": "mountains.mp3" }
+          ],
+          "target_sentences": [
+            { "english": "Camels live in deserts.", "chinese": "", "audio": "sentence_u3_s5_1.mp3" },
+            { "english": "Orang-utans live in rainforests.", "chinese": "", "audio": "sentence_u3_s5_2.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W3_S5_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose the habitat.",
+              "audio_text": "desert",
+              "options": [
+                { "text": "desert", "image": "" },
+                { "text": "rainforest", "image": "" },
+                { "text": "ocean", "image": "" }
+              ],
+              "correct": "desert"
+            },
+            {
+              "question_id": "W3_S5_Q2",
+              "type": "spelling_puzzle",
+              "question_text": "Spell the habitat.",
+              "word": "ocean",
+              "scrambled": ["e", "a", "c", "o", "n"],
+              "chinese": "",
+              "image": ""
+            }
+          ]
+        },
+        {
+          "session_number": 6,
+          "round": 1,
+          "title": "Unit 3 – Animal World (Part B)",
+          "vocabulary_review": ["desert", "rainforest", "ocean", "mountains"],
+          "vocabulary": [
+            { "word": "camel", "chinese": "", "image": "camel.png", "audio": "camel.mp3" },
+            { "word": "eagle", "chinese": "", "image": "eagle.png", "audio": "eagle.mp3" },
+            { "word": "dolphin", "chinese": "", "image": "dolphin.png", "audio": "dolphin.mp3" },
+            { "word": "orang-utan", "chinese": "", "image": "orang-utan.png", "audio": "orangutan.mp3" }
+          ],
+          "target_sentences": [
+            { "english": "Do eagles live in mountains? Yes, they do.", "chinese": "", "audio": "sentence_u3_s6_1.mp3" },
+            { "english": "Does a camel live in the desert? Yes, it does.", "chinese": "", "audio": "sentence_u3_s6_2.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W3_S6_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose the animal.",
+              "audio_text": "dolphin",
+              "options": [
+                { "text": "camel", "image": "" },
+                { "text": "eagle", "image": "" },
+                { "text": "dolphin", "image": "" }
+              ],
+              "correct": "dolphin"
+            },
+            {
+              "question_id": "W3_S6_Q2",
+              "type": "shadowing",
+              "sentence": "Do eagles live in mountains? Yes, they do.",
+              "chinese": "",
+              "audio": "sentence_u3_s6_1.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 4,
+      "sessions": [
+        {
+          "session_number": 7,
+          "round": 1,
+          "title": "Unit 4 – The World of Plants (Part A)",
+          "vocabulary": [
+            { "word": "root", "chinese": "", "image": "root.png", "audio": "root.mp3" },
+            { "word": "stem", "chinese": "", "image": "stem.png", "audio": "stem.mp3" },
+            { "word": "leaf", "chinese": "", "image": "leaf.png", "audio": "leaf.mp3" },
+            { "word": "flower", "chinese": "", "image": "flower.png", "audio": "flower.mp3" },
+            { "word": "seed", "chinese": "", "image": "seed.png", "audio": "seed.mp3" }
+          ],
+          "target_sentences": [
+            { "english": "A plant has roots, a stem and leaves.", "chinese": "", "audio": "sentence_u4_s7_1.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W4_S7_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose the part.",
+              "audio_text": "leaf",
+              "options": [
+                { "text": "root", "image": "" },
+                { "text": "stem", "image": "" },
+                { "text": "leaf", "image": "" }
+              ],
+              "correct": "leaf"
+            },
+            {
+              "question_id": "W4_S7_Q2",
+              "type": "spelling_puzzle",
+              "question_text": "Spell the word.",
+              "word": "flower",
+              "scrambled": ["w", "o", "f", "l", "e", "r"],
+              "chinese": "",
+              "image": ""
+            }
+          ]
+        },
+        {
+          "session_number": 8,
+          "round": 1,
+          "title": "Unit 4 – The World of Plants (Part B)",
+          "vocabulary_review": ["root", "stem", "leaf", "flower", "seed"],
+          "vocabulary": [
+            { "word": "branch", "chinese": "", "image": "branch.png", "audio": "branch.mp3" },
+            { "word": "trunk", "chinese": "", "image": "trunk.png", "audio": "trunk.mp3" },
+            { "word": "soil", "chinese": "", "image": "soil.png", "audio": "soil.mp3" },
+            { "word": "tomato", "chinese": "", "image": "tomato.png", "audio": "tomato.mp3" }
+          ],
+          "target_sentences": [
+            { "english": "Leaves are green. Tomatoes are red.", "chinese": "", "audio": "sentence_u4_s8_1.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W4_S8_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose.",
+              "audio_text": "trunk",
+              "options": [
+                { "text": "branch", "image": "" },
+                { "text": "trunk", "image": "" },
+                { "text": "soil", "image": "" }
+              ],
+              "correct": "trunk"
+            },
+            {
+              "question_id": "W4_S8_Q2",
+              "type": "shadowing",
+              "sentence": "Leaves are green.",
+              "chinese": "",
+              "audio": "sentence_u4_s8_1.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 5,
+      "sessions": [
+        {
+          "session_number": 9,
+          "round": 1,
+          "title": "Unit 5 – At the Beach (Part A)",
+          "vocabulary": [
+            { "word": "beach ball", "chinese": "", "image": "beach ball.png", "audio": "beach_ball.mp3" },
+            { "word": "bucket", "chinese": "", "image": "bucket.png", "audio": "bucket.mp3" },
+            { "word": "spade", "chinese": "", "image": "spade.png", "audio": "spade.mp3" },
+            { "word": "mask", "chinese": "", "image": "mask.png", "audio": "mask.mp3" }
+          ],
+          "target_sentences": [
+            { "english": "I have a bucket and a spade.", "chinese": "", "audio": "sentence_u5_s9_1.mp3" },
+            { "english": "Do you have a mask?", "chinese": "", "audio": "sentence_u5_s9_2.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W5_S9_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose.",
+              "audio_text": "bucket",
+              "options": [
+                { "text": "beach ball", "image": "" },
+                { "text": "bucket", "image": "" },
+                { "text": "spade", "image": "" }
+              ],
+              "correct": "bucket"
+            },
+            {
+              "question_id": "W5_S9_Q2",
+              "type": "spelling_puzzle",
+              "question_text": "Spell the word.",
+              "word": "spade",
+              "scrambled": ["d", "e", "p", "a", "s"],
+              "chinese": "",
+              "image": ""
+            }
+          ]
+        },
+        {
+          "session_number": 10,
+          "round": 1,
+          "title": "Unit 5 – At the Beach (Part B)",
+          "vocabulary_review": ["beach ball", "bucket", "spade", "mask"],
+          "vocabulary": [
+            { "word": "snorkel", "chinese": "", "image": "snorkel.png", "audio": "snorkel.mp3" },
+            { "word": "goggles", "chinese": "", "image": "goggles.png", "audio": "goggles.mp3" },
+            { "word": "crab", "chinese": "", "image": "crab.png", "audio": "crab.mp3" },
+            { "word": "starfish", "chinese": "", "image": "starfish.png", "audio": "starfish.mp3" }
+          ],
+          "target_sentences": [
+            { "english": "I can see a crab and a starfish.", "chinese": "", "audio": "sentence_u5_s10_1.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W5_S10_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose the sea creature.",
+              "audio_text": "starfish",
+              "options": [
+                { "text": "crab", "image": "" },
+                { "text": "starfish", "image": "" },
+                { "text": "snorkel", "image": "" }
+              ],
+              "correct": "starfish"
+            },
+            {
+              "question_id": "W5_S10_Q2",
+              "type": "shadowing",
+              "sentence": "I can see a crab and a starfish.",
+              "chinese": "",
+              "audio": "sentence_u5_s10_1.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 6,
+      "sessions": [
+        {
+          "session_number": 11,
+          "round": 1,
+          "title": "Skills – Units 1-3 Review A",
+          "vocabulary": [
+            { "word": "mop", "chinese": "", "image": "mop.png", "audio": "mop.mp3" },
+            { "word": "happy", "chinese": "", "image": "happy.png", "audio": "happy.mp3" },
+            { "word": "camel", "chinese": "", "image": "camel.png", "audio": "camel.mp3" }
+          ],
+          "target_sentences": [
+            { "english": "Shall I help you?", "chinese": "", "audio": "sentence_skills_11_1.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W6_S11_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose.",
+              "audio_text": "happy",
+              "options": [
+                { "text": "mop", "image": "" },
+                { "text": "happy", "image": "" },
+                { "text": "camel", "image": "" }
+              ],
+              "correct": "happy"
+            },
+            {
+              "question_id": "W6_S11_Q2",
+              "type": "spelling_puzzle",
+              "question_text": "Spell the feeling.",
+              "word": "happy",
+              "scrambled": ["p", "y", "a", "p", "h"],
+              "chinese": "",
+              "image": ""
+            }
+          ]
+        },
+        {
+          "session_number": 12,
+          "round": 1,
+          "title": "Skills – Units 4-5 Review B",
+          "vocabulary": [
+            { "word": "flower", "chinese": "", "image": "flower.png", "audio": "flower.mp3" },
+            { "word": "crab", "chinese": "", "image": "crab.png", "audio": "crab.mp3" }
+          ],
+          "target_sentences": [
+            { "english": "A plant has roots and a stem.", "chinese": "", "audio": "sentence_skills_12_1.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W6_S12_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose.",
+              "audio_text": "crab",
+              "options": [
+                { "text": "flower", "image": "" },
+                { "text": "crab", "image": "" }
+              ],
+              "correct": "crab"
+            },
+            {
+              "question_id": "W6_S12_Q2",
+              "type": "shadowing",
+              "sentence": "A plant has roots and a stem.",
+              "chinese": "",
+              "audio": "sentence_skills_12_1.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 7,
+      "sessions": [
+        {
+          "session_number": 13,
+          "round": 2,
+          "title": "Unit 1 – A Helping Hand Deep Review (Round 2)",
+          "vocabulary_review": ["mop", "clear", "put away", "paint", "wash", "tidy"],
+          "vocabulary": [
+            { "word": "mop", "chinese": "", "image": "mop.png", "audio": "mop.mp3" },
+            { "word": "wash", "chinese": "", "image": "wash.png", "audio": "wash.mp3" }
+          ],
+          "target_sentences": [
+            { "english": "Shall we help our parents? Yes, let's!", "chinese": "", "audio": "sentence_u1_r2_1.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W7_S13_Q1",
+              "type": "spelling_puzzle",
+              "question_text": "Spell the chore.",
+              "word": "tidy",
+              "scrambled": ["y", "d", "i", "t"],
+              "chinese": "",
+              "image": "tidy.png"
+            },
+            {
+              "question_id": "W7_S13_Q2",
+              "type": "shadowing",
+              "sentence": "Shall I mop the floor? Yes, please.",
+              "chinese": "",
+              "audio": "sentence_u1_r2_2.mp3"
+            }
+          ]
+        },
+        {
+          "session_number": 14,
+          "round": 2,
+          "title": "Unit 1 – Pronouns & Chores Deep Review (Round 2)",
+          "vocabulary_review": ["mop", "clear", "put away", "paint", "wash", "tidy"],
+          "vocabulary": [],
+          "target_sentences": [
+            { "english": "He helps me. She helps him.", "chinese": "", "audio": "sentence_u1_r2_3.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W7_S14_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose the correct action.",
+              "audio_text": "She helps him.",
+              "options": [
+                { "text": "He helps me.", "image": "mop.png" },
+                { "text": "She helps him.", "image": "wash.png" }
+              ],
+              "correct": "She helps him."
+            },
+            {
+              "question_id": "W7_S14_Q2",
+              "type": "shadowing",
+              "sentence": "He helps me tidy the room.",
+              "chinese": "",
+              "audio": "sentence_u1_r2_4.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 8,
+      "sessions": [
+        {
+          "session_number": 15,
+          "round": 2,
+          "title": "Unit 2 – Feelings Deep Review (Round 2)",
+          "vocabulary_review": ["happy", "sad", "angry", "scared", "worried", "excited", "surprised", "tired", "bored"],
+          "vocabulary": [],
+          "target_sentences": [
+            { "english": "Why are you scared? Because I see a big dog.", "chinese": "", "audio": "sentence_u2_r2_1.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W8_S15_Q1",
+              "type": "spelling_puzzle",
+              "question_text": "Spell the feeling.",
+              "word": "excited",
+              "scrambled": ["e", "c", "i", "t", "e", "d", "x"],
+              "chinese": "",
+              "image": "excited.png"
+            },
+            {
+              "question_id": "W8_S15_Q2",
+              "type": "shadowing",
+              "sentence": "Why are you scared? Because I see a big dog.",
+              "chinese": "",
+              "audio": "sentence_u2_r2_1.mp3"
+            }
+          ]
+        },
+        {
+          "session_number": 16,
+          "round": 2,
+          "title": "Unit 2 – Why/Because Deep Practice (Round 2)",
+          "vocabulary_review": [],
+          "vocabulary": [],
+          "target_sentences": [
+            { "english": "Why is she happy? Because she has a new toy.", "chinese": "", "audio": "sentence_u2_r2_2.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W8_S16_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose the correct reason.",
+              "audio_text": "Because she has a new toy.",
+              "options": [
+                { "text": "Because she is tired.", "image": "tired.png" },
+                { "text": "Because she has a new toy.", "image": "excited.png" }
+              ],
+              "correct": "Because she has a new toy."
+            },
+            {
+              "question_id": "W8_S16_Q2",
+              "type": "shadowing",
+              "sentence": "Why is she happy? Because she has a new toy.",
+              "chinese": "",
+              "audio": "sentence_u2_r2_2.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 9,
+      "sessions": [
+        {
+          "session_number": 17,
+          "round": 2,
+          "title": "Unit 3 – Animal World Deep Review (Round 2)",
+          "vocabulary_review": ["desert", "rainforest", "ocean", "mountains", "camel", "eagle", "dolphin", "orang-utan"],
+          "vocabulary": [],
+          "target_sentences": [
+            { "english": "Orang-utans live in rainforests. Do they eat fruits? Yes, they do.", "chinese": "", "audio": "sentence_u3_r2_1.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W9_S17_Q1",
+              "type": "spelling_puzzle",
+              "question_text": "Spell the animal.",
+              "word": "dolphin",
+              "scrambled": ["l", "o", "d", "p", "h", "i", "n"],
+              "chinese": "",
+              "image": "dolphin.png"
+            },
+            {
+              "question_id": "W9_S17_Q2",
+              "type": "shadowing",
+              "sentence": "Orang-utans live in rainforests.",
+              "chinese": "",
+              "audio": "sentence_u3_r2_1.mp3"
+            }
+          ]
+        },
+        {
+          "session_number": 18,
+          "round": 2,
+          "title": "Unit 3 – Present Simple Q&A Review (Round 2)",
+          "vocabulary_review": [],
+          "vocabulary": [],
+          "target_sentences": [
+            { "english": "Do eagles eat fish? No, they don't. They eat meat.", "chinese": "", "audio": "sentence_u3_r2_2.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W9_S18_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose the correct answer.",
+              "audio_text": "Do eagles eat fish?",
+              "options": [
+                { "text": "Yes, they do.", "image": "eagle.png" },
+                { "text": "No, they don't.", "image": "camel.png" }
+              ],
+              "correct": "No, they don't."
+            },
+            {
+              "question_id": "W9_S18_Q2",
+              "type": "shadowing",
+              "sentence": "Do eagles eat fish? No, they don't.",
+              "chinese": "",
+              "audio": "sentence_u3_r2_2.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 10,
+      "sessions": [
+        {
+          "session_number": 19,
+          "round": 2,
+          "title": "Unit 4 – Plant World Deep Review (Round 2)",
+          "vocabulary_review": ["root", "stem", "leaf", "flower", "seed", "branch", "trunk", "soil", "tomato"],
+          "vocabulary": [],
+          "target_sentences": [
+            { "english": "First, put the seed in the soil. Then water it.", "chinese": "", "audio": "sentence_u4_r2_1.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W10_S19_Q1",
+              "type": "spelling_puzzle",
+              "question_text": "Spell the plant part.",
+              "word": "branch",
+              "scrambled": ["c", "n", "r", "a", "b", "h"],
+              "chinese": "",
+              "image": "branch.png"
+            },
+            {
+              "question_id": "W10_S19_Q2",
+              "type": "shadowing",
+              "sentence": "First, put the seed in the soil. Then water it.",
+              "chinese": "",
+              "audio": "sentence_u4_r2_1.mp3"
+            }
+          ]
+        },
+        {
+          "session_number": 20,
+          "round": 2,
+          "title": "Unit 4 – Plurals Review (Round 2)",
+          "vocabulary_review": [],
+          "vocabulary": [],
+          "target_sentences": [
+            { "english": "Tomatoes are red. Leaves are green.", "chinese": "", "audio": "sentence_u4_r2_2.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W10_S20_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose the correct plural.",
+              "audio_text": "leaves",
+              "options": [
+                { "text": "leafs", "image": "leaf.png" },
+                { "text": "leaves", "image": "leaf.png" }
+              ],
+              "correct": "leaves"
+            },
+            {
+              "question_id": "W10_S20_Q2",
+              "type": "shadowing",
+              "sentence": "Tomatoes are red. Leaves are green.",
+              "chinese": "",
+              "audio": "sentence_u4_r2_2.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 11,
+      "sessions": [
+        {
+          "session_number": 21,
+          "round": 2,
+          "title": "Unit 5 – At the Beach Deep Review (Round 2)",
+          "vocabulary_review": ["beach ball", "bucket", "spade", "mask", "snorkel", "goggles", "crab", "starfish"],
+          "vocabulary": [],
+          "target_sentences": [
+            { "english": "Do you have a snorkel and goggles? Yes, I do.", "chinese": "", "audio": "sentence_u5_r2_1.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W11_S21_Q1",
+              "type": "spelling_puzzle",
+              "question_text": "Spell the beach item.",
+              "word": "goggles",
+              "scrambled": ["g", "g", "l", "e", "s", "o"],
+              "chinese": "",
+              "image": "goggles.png"
+            },
+            {
+              "question_id": "W11_S21_Q2",
+              "type": "shadowing",
+              "sentence": "Do you have a snorkel and goggles? Yes, I do.",
+              "chinese": "",
+              "audio": "sentence_u5_r2_1.mp3"
+            }
+          ]
+        },
+        {
+          "session_number": 22,
+          "round": 2,
+          "title": "Unit 5 – Story & Exclamation Review (Round 2)",
+          "vocabulary_review": [],
+          "vocabulary": [],
+          "target_sentences": [
+            { "english": "What a big crab! It has two big claws.", "chinese": "", "audio": "sentence_u5_r2_2.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W11_S22_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose the correct creature.",
+              "audio_text": "What a big crab!",
+              "options": [
+                { "text": "crab", "image": "crab.png" },
+                { "text": "starfish", "image": "starfish.png" }
+              ],
+              "correct": "crab"
+            },
+            {
+              "question_id": "W11_S22_Q2",
+              "type": "shadowing",
+              "sentence": "What a big crab! It has two big claws.",
+              "chinese": "",
+              "audio": "sentence_u5_r2_2.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 12,
+      "sessions": [
+        {
+          "session_number": 23,
+          "round": 2,
+          "title": "Final Challenge – Part 1 (Units 1-3)",
+          "vocabulary_review": ["mop", "happy", "camel", "desert"],
+          "vocabulary": [],
+          "target_sentences": [
+            { "english": "I am happy because I help my mum.", "chinese": "", "audio": "sentence_final_23_1.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W12_S23_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose the best answer.",
+              "audio_text": "I am happy because I help my mum.",
+              "options": [
+                { "text": "happy", "image": "happy.png" },
+                { "text": "sad", "image": "sad.png" }
+              ],
+              "correct": "happy"
+            },
+            {
+              "question_id": "W12_S23_Q2",
+              "type": "spelling_puzzle",
+              "question_text": "Spell the word from the sentence.",
+              "word": "help",
+              "scrambled": ["l", "e", "h", "p"],
+              "chinese": "",
+              "image": "mop.png"
+            },
+            {
+              "question_id": "W12_S23_Q3",
+              "type": "shadowing",
+              "sentence": "I am happy because I help my mum.",
+              "chinese": "",
+              "audio": "sentence_final_23_1.mp3"
+            }
+          ]
+        },
+        {
+          "session_number": 24,
+          "round": 2,
+          "title": "Final Challenge – Part 2 (Units 4-5) & Celebration",
+          "vocabulary_review": ["flower", "crab", "trunk", "starfish"],
+          "vocabulary": [],
+          "target_sentences": [
+            { "english": "I can see a starfish and a crab at the beach.", "chinese": "", "audio": "sentence_final_24_1.mp3" }
+          ],
+          "exercises": [
+            {
+              "question_id": "W12_S24_Q1",
+              "type": "listening_image",
+              "question_text": "Listen and choose the sea creature.",
+              "audio_text": "starfish",
+              "options": [
+                { "text": "crab", "image": "crab.png" },
+                { "text": "starfish", "image": "starfish.png" },
+                { "text": "sea shell", "image": "" }
+              ],
+              "correct": "starfish"
+            },
+            {
+              "question_id": "W12_S24_Q2",
+              "type": "spelling_puzzle",
+              "question_text": "Spell the flower.",
+              "word": "flower",
+              "scrambled": ["f", "l", "o", "w", "e", "r"],
+              "chinese": "",
+              "image": "flower.png"
+            },
+            {
+              "question_id": "W12_S24_Q3",
+              "type": "shadowing",
+              "sentence": "I can see a starfish and a crab at the beach.",
+              "chinese": "",
+              "audio": "sentence_final_24_1.mp3"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
