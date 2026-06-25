@@ -23,7 +23,7 @@ def init_state():
         "big_image": None,
         "big_image_angle": 0,
         "grammar_video_loaded": False,
-        "grammar_video_id": "",
+        "grammar_video_url": "",
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -97,7 +97,7 @@ def main():
             for k in ["current_session","current_exercise","score","stars","finished_today","grammar_video_loaded"]:
                 st.session_state.pop(k, None); st.rerun()
 
-    # ========= 语法视频输入与加载 =========
+    # ========= 语法视频输入与加载（始终显示） =========
     st.markdown("---")
     col_input, col_btn = st.columns([3, 1])
     with col_input:
@@ -110,69 +110,27 @@ def main():
         if st.button("📥 Load Video", use_container_width=True):
             vid = parse_youtube_video_id(grammar_url)
             if vid:
-                st.session_state.grammar_video_id = vid
+                st.session_state.grammar_video_url = f"https://youtu.be/{vid}"
                 st.session_state.grammar_video_loaded = True
                 st.rerun()
             else:
                 st.error("Invalid YouTube URL")
-    st.markdown("---")
 
-    # ========= 语法视频播放器 + 控制按钮 =========
-    if st.session_state.grammar_video_loaded and st.session_state.grammar_video_id:
-        vid = st.session_state.grammar_video_id
-        import random
-        uid = random.randint(1000, 9999)
-        player_id = f"grammar_player_{uid}"
+    # ========= 视频区域（仅加载后显示，Close后完全移除） =========
+    if st.session_state.grammar_video_loaded and st.session_state.grammar_video_url:
+        with st.container():
+            st.markdown("<div class='card'>", unsafe_allow_html=True)
+            st.markdown("### 🎬 Grammar Video")
+            # 使用st.video，自带播放/暂停/进度条，完全原生
+            st.video(st.session_state.grammar_video_url)
+            # 关闭按钮
+            if st.button("✖ Close Video", key="close_grammar_video", use_container_width=True):
+                st.session_state.grammar_video_loaded = False
+                st.session_state.grammar_video_url = ""
+                st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
 
-        html_code = f"""
-        <div id="grammar-container-{uid}" style="background: white; border-radius: 24px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: 12px 0; transition: all 0.3s;">
-            <h3 style="color: #333; font-family: 'Quicksand', sans-serif; margin-top:0;">🎬 Grammar Video</h3>
-            <div style="position:relative; width:100%; max-width:800px; margin:0 auto;">
-                <div style="position:relative; padding-bottom:56.25%; height:0;">
-                    <iframe id="{player_id}" 
-                        src="https://www.youtube.com/embed/{vid}?rel=0&modestbranding=1&controls=1&playsinline=1&iv_load_policy=3&cc_load_policy=0&enablejsapi=1" 
-                        style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius:12px;" 
-                        frameborder="0" allowfullscreen>
-                    </iframe>
-                </div>
-            </div>
-            <div style="display:flex; gap:12px; margin-top:16px;">
-                <button onclick="playVideo_{uid}()" style="flex:1; padding:16px; font-size:22px; background:#4CAF50; color:white; border:none; border-radius:16px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">▶️ Play</button>
-                <button onclick="pauseVideo_{uid}()" style="flex:1; padding:16px; font-size:22px; background:#FF9800; color:white; border:none; border-radius:16px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">⏸️ Pause</button>
-                <button onclick="closeVideo_{uid}()" style="flex:1; padding:16px; font-size:22px; background:#f44336; color:white; border:none; border-radius:16px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">✖ Close</button>
-            </div>
-        </div>
-        <script>
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        var player_{uid};
-        function onYouTubeIframeAPIReady() {{
-            player_{uid} = new YT.Player('{player_id}', {{}});
-        }}
-        function playVideo_{uid}() {{ if(player_{uid}) player_{uid}.playVideo(); }}
-        function pauseVideo_{uid}() {{ if(player_{uid}) player_{uid}.pauseVideo(); }}
-        function closeVideo_{uid}() {{
-            if(player_{uid}) player_{uid}.stopVideo();
-            // 彻底销毁容器：清空内容并压缩高度至0
-            var container = document.getElementById('grammar-container-{uid}');
-            if(container) {{
-                container.innerHTML = '';
-                container.style.padding = '0';
-                container.style.margin = '0';
-                container.style.height = '0';
-                container.style.overflow = 'hidden';
-                container.style.border = 'none';
-                container.style.boxShadow = 'none';
-                container.style.background = 'transparent';
-            }}
-        }}
-        </script>
-        """
-        components.html(html_code, height=500)
-
-    # ========= 主课程内容 =========
+    # ========= 主课程内容（不变） =========
     weeks = data.get("weeks", [])
     if not weeks: st.warning("No course data"); return
     all_sessions = [s for w in weeks for s in w.get("sessions", [])]
