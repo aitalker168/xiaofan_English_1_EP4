@@ -1,17 +1,16 @@
-import os, sys, json
+import os, sys, json, re
 from pathlib import Path
 project_dir = Path(__file__).resolve().parent
-portable_root = project_dir.parents[1]
-bin_path = portable_root / "bin"
-os.environ["PATH"] = str(bin_path) + ";" + os.environ.get("PATH", "")
 
 import streamlit as st
 st.set_page_config(page_title="⭐ English Learner", layout="centered", initial_sidebar_state="collapsed")
+
 from utils import (
     load_course_data, load_video_config, save_video_config,
     parse_youtube_url, audio_button, recorder_widget,
     resolve_image_path, rotate_image, IMAGE_DIR
 )
+import streamlit.components.v1 as components
 
 def init_state():
     defaults = {
@@ -23,6 +22,8 @@ def init_state():
         "finished_today": False,
         "big_image": None,
         "big_image_angle": 0,
+        "show_grammar_video": False,
+        "grammar_video_embed": "",
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -51,53 +52,146 @@ def set_custom_style():
         .huge-text { font-size: 36px; font-weight: 700; }
         .progress-rabbit { text-align: center; font-size: 28px; margin-bottom: 10px; }
         .sidebar .sidebar-content { background: #fff3e0; }
-        .stButton > button { color: white !important; background: #4CAF50; border: none !important; padding: 12px 24px; font-size: 18px; border-radius: 12px; font-weight: 600; }
-        .stButton > button:hover { background: #45a049; }
-        .stButton > button[kind="primary"] { background: #38BDF8; }
-        .stButton > button[kind="primary"]:hover { background: #0ea5e9; }
-        .stTextInput input, .stTextArea textarea { color: #333 !important; background: white !important; border: 2px solid #ddd !important; border-radius: 12px !important; padding: 12px !important; font-size: 18px !important; }
-        .stProgress > div > div { background: linear-gradient(90deg, #38BDF8, #A3E635) !important; }
-        .stSuccess { color: #2e7d32; background: #e8f5e9; padding: 10px; border-radius: 12px; }
-        .stWarning { color: #e65100; background: #fff3e0; padding: 10px; border-radius: 12px; }
-        .stInfo { color: #1565c0; background: #e3f2fd; padding: 10px; border-radius: 12px; }
-        .stImage > img { cursor: default !important; }
-        .stImage > button { display: none !important; }
+        .stButton > button {
+            padding: 16px 32px !important;
+            font-size: 22px !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        }
+        .stButton > button[kind="primary"] { background: #38BDF8 !important; }
+        .stButton > button[kind="primary"]:hover { background: #0ea5e9 !important; }
+        #big-image-section .stButton > button:not(:last-child) {
+            background: #2196F3 !important;
+            font-size: 28px !important;
+            padding: 24px 40px !important;
+            width: 100% !important;
+        }
+        #big-image-section .stButton > button:not(:last-child):hover { background: #1976D2 !important; }
         #big-image-section .stButton:last-child > button {
             background: #f44336 !important;
-            font-size: 28px !important;
-            padding: 20px 40px !important;
-            border-radius: 20px !important;
-            font-weight: bold !important;
+            font-size: 32px !important;
+            padding: 28px 60px !important;
+            border-radius: 24px !important;
             width: 100% !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
         }
-        #big-image-section .stButton:last-child > button:hover {
-            background: #d32f2f !important;
+        #big-image-section .stButton:last-child > button:hover { background: #d32f2f !important; }
+        .stImage > button { display: none !important; }
+        .element-container .stImage > div > div > button { display: none !important; }
+        .stTextInput input, .stTextArea textarea {
+            color: #333 !important;
+            background: white !important;
+            border: 2px solid #ddd !important;
+            border-radius: 12px !important;
+            padding: 16px !important;
+            font-size: 20px !important;
         }
+        .stProgress > div > div { background: linear-gradient(90deg, #38BDF8, #A3E635) !important; }
+        .stSuccess { color: #2e7d32; background: #e8f5e9; padding: 16px; border-radius: 16px; font-size: 22px; }
+        .stWarning { color: #e65100; background: #fff3e0; padding: 16px; border-radius: 16px; font-size: 22px; }
+        .stInfo { color: #1565c0; background: #e3f2fd; padding: 16px; border-radius: 16px; font-size: 22px; }
         </style>
     """, unsafe_allow_html=True)
+
+def parse_youtube_video_id(url: str) -> str:
+    m = re.search(r"(?:v=|youtu\.be/|/v/)([a-zA-Z0-9_-]{11})", url)
+    return m.group(1) if m else ""
 
 def main():
     init_state()
     set_custom_style()
+
+    # 检测关闭视频参数
+    query_params = st.query_params
+    if "close_video" in query_params:
+        st.session_state.show_grammar_video = False
+        st.query_params.clear()
+        st.rerun()
+
     data = load_course_data()
     if data is None:
         st.warning("Please generate course_data.json first."); return
 
+    # ========= 侧边栏（只保留课程视频和家长控制） =========
     with st.sidebar:
         st.markdown("## 👨‍👦 Parent Control")
         video_cfg = load_video_config()
-        new_url = st.text_input("📺 YouTube URL", value=video_cfg.get("youtube_url",""))
-        if st.button("💾 Save", use_container_width=True):
+        new_url = st.text_input("📺 Lesson YouTube URL", value=video_cfg.get("youtube_url",""))
+        if st.button("💾 Save Lesson Video", use_container_width=True):
             save_video_config(new_url); st.success("Saved!"); st.rerun()
         st.divider()
         total_sessions = data['course_metadata']['total_sessions']
         st.markdown(f"**Stars**: {'⭐'*min(st.session_state.stars,5)} {st.session_state.stars}")
         st.markdown(f"**Session**: {st.session_state.current_session+1}/{total_sessions}")
         if st.button("Reset Progress", use_container_width=True):
-            for k in ["current_session","current_exercise","score","stars","finished_today"]:
+            for k in ["current_session","current_exercise","score","stars","finished_today","show_grammar_video","grammar_video_embed"]:
                 st.session_state.pop(k, None); st.rerun()
 
+    # ========= 语法视频输入框（固定显示在所有页面顶部） =========
+    st.markdown("---")
+    col_input, col_btn = st.columns([3, 1])
+    with col_input:
+        grammar_url = st.text_input("🎬 Grammar Video URL (optional)", 
+                                    value=st.session_state.get("grammar_url_input",""),
+                                    key="grammar_url_input",
+                                    placeholder="Paste YouTube grammar video link here")
+    with col_btn:
+        st.markdown("<br>", unsafe_allow_html=True)  # 对齐按钮
+        if st.button("▶️ Play", use_container_width=True):
+            vid = parse_youtube_video_id(grammar_url)
+            if vid:
+                embed = f"https://www.youtube.com/embed/{vid}?rel=0&modestbranding=1&controls=1&playsinline=1&autoplay=1&iv_load_policy=3&cc_load_policy=0&enablejsapi=1"
+                st.session_state.grammar_video_embed = embed
+                st.session_state.show_grammar_video = True
+                st.rerun()
+            else:
+                st.error("Invalid YouTube URL")
+    st.markdown("---")
+
+    # ========= 语法视频浮层 =========
+    if st.session_state.show_grammar_video and st.session_state.grammar_video_embed:
+        embed_url = st.session_state.grammar_video_embed
+        player_id = "grammar_player"
+        html_code = f"""
+        <div id="video-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; display:flex; justify-content:center; align-items:center; flex-direction:column;">
+            <div style="position:relative; width:90%; max-width:800px;">
+                <div style="position:relative; padding-bottom:56.25%; height:0;">
+                    <iframe id="{player_id}" src="{embed_url}" style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius:12px;" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+                </div>
+            </div>
+            <button onclick="closeVideo()" style="margin-top:20px; padding:16px 48px; font-size:28px; background:#f44336; color:white; border:none; border-radius:20px; cursor:pointer; font-weight:bold; box-shadow:0 4px 12px rgba(0,0,0,0.3);">✖ Close Video</button>
+        </div>
+        <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        var player;
+        function onYouTubeIframeAPIReady() {{
+            player = new YT.Player('{player_id}', {{
+                events: {{
+                    'onStateChange': onPlayerStateChange
+                }}
+            }});
+        }}
+        function onPlayerStateChange(event) {{
+            if (event.data == 0) {{  // ended
+                closeVideo();
+            }}
+        }}
+        function closeVideo() {{
+            if (player && player.stopVideo) player.stopVideo();
+            // 通过添加URL参数触发Streamlit rerun以关闭状态
+            var url = new URL(window.location.href);
+            url.searchParams.set('close_video', '1');
+            window.location.href = url.href;
+        }}
+        </script>
+        """
+        components.html(html_code, height=0)
+
+    # ========= 主内容 =========
     weeks = data.get("weeks", [])
     if not weeks: st.warning("No course data"); return
     all_sessions = [s for w in weeks for s in w.get("sessions", [])]
@@ -114,10 +208,11 @@ def main():
         st.progress(prog)
         st.markdown(f"<div class='progress-rabbit'>🐰 Session {sess_idx+1}/{total}</div>", unsafe_allow_html=True)
     with col3: st.markdown(f"⭐{st.session_state.score}")
+
     st.markdown("---")
     st.markdown(f"## 📖 {sess.get('title','')}")
 
-    # Video card
+    # 课程视频卡片
     with st.container():
         st.markdown("<div class='card'>", unsafe_allow_html=True)
         yt = load_video_config().get("youtube_url","")
@@ -128,7 +223,7 @@ def main():
             st.info("Enter a YouTube URL in the sidebar and save it.")
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # Vocabulary (no Chinese caption)
+    # 词汇
     vocab = sess.get("vocabulary", [])
     if vocab:
         st.markdown("### 🗂️ Vocabulary")
@@ -140,7 +235,7 @@ def main():
                 fp = resolve_image_path(img_fn)
                 if fp and fp.exists():
                     st.image(fp, width=120, use_container_width=False)
-                    if st.button("🔍 View Large", key=f"big_{sess_idx}_{i}"):
+                    if st.button("🔍 View Large", key=f"big_{sess_idx}_{i}", use_container_width=True):
                         st.session_state.big_image = str(fp)
                         st.session_state.big_image_angle = 0
                         st.rerun()
@@ -150,11 +245,10 @@ def main():
                     r,g,b = (seed*37)%200+55, (seed*41)%200+55, (seed*43)%200+55
                     st.markdown(f'<div style="width:120px;height:160px;background:rgb({r},{g},{b});border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto;"><span style="font-size:56px;color:white;font-weight:bold;">{letter}</span></div>', unsafe_allow_html=True)
                 st.markdown(f"<span style='font-size:28px;font-weight:bold;'>{wd['word']}</span>", unsafe_allow_html=True)
-                # No Chinese caption – remove st.caption
                 audio_button(wd["word"], key_suffix=f"voc_{sess_idx}_{i}")
                 st.markdown("</div>", unsafe_allow_html=True)
 
-    # Large image overlay
+    # 大图
     if st.session_state.big_image and os.path.exists(st.session_state.big_image):
         st.markdown("---")
         st.markdown('<div id="big-image-section">', unsafe_allow_html=True)
@@ -165,16 +259,16 @@ def main():
         st.image(rotated_path, use_container_width=True, clamp=True)
         col_b1, col_b2 = st.columns(2)
         with col_b1:
-            if st.button("🔄 Rotate Left 90°"):
+            if st.button("🔄 Rotate Left 90°", use_container_width=True):
                 st.session_state.big_image_angle -= 90; st.rerun()
         with col_b2:
-            if st.button("🔄 Rotate Right 90°"):
+            if st.button("🔄 Rotate Right 90°", use_container_width=True):
                 st.session_state.big_image_angle += 90; st.rerun()
         if st.button("✖ Close Image (Back)", key="close_big_image", use_container_width=True):
             st.session_state.big_image = None; st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Exercises
+    # 练习
     st.markdown("---")
     exercises = sess.get("exercises", [])
     ex_idx = st.session_state.current_exercise
@@ -212,7 +306,6 @@ def main():
             word = ex.get("word","")
             scrambled = ex.get("scrambled",[])
             st.markdown("**Spell the word** – type the letters in correct order.")
-            # Remove Chinese hint – only show the word image and scrambled letters
             img_w = ex.get("image","")
             fp = resolve_image_path(img_w)
             if fp and fp.exists():
@@ -229,10 +322,8 @@ def main():
                 st.session_state.current_exercise += 1; st.rerun()
         elif q_type == "shadowing":
             sentence = ex.get("sentence","")
-            chinese = ex.get("chinese","")  # keep but not display? we can ignore
             st.markdown("### 🎤 Shadow the sentence")
             st.markdown(f"<div class='card' style='text-align:center;font-size:32px;'>{sentence}</div>", unsafe_allow_html=True)
-            # Do not show Chinese translation
             audio_button(sentence, label="🔊 Listen first", key_suffix=f"shadow_{ex['question_id']}")
             ph = f"shadow_{ex['question_id']}"
             recorder_widget(ph, key_suffix=ex['question_id'])
